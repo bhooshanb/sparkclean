@@ -29,6 +29,9 @@ into a premium Mac utility, branded **SparkClean**: **Clean**, **Apps**, **Optim
   and no color-only information.
 - **Menu bar mini monitor**: independent of the main window; health score, core
   metrics, top processes, Clean Watch summary, and On/Off · Wipe · Open.
+- **Auto-updates**: [Sparkle](https://github.com/sparkle-project/Sparkle) checks
+  the appcast on launch and via **SparkClean → Check for Updates…** (⌘-check);
+  release signing uses Sparkle's EdDSA keys (`SUPublicEDKey` in Info.plist).
 
 ## Requirements
 
@@ -64,9 +67,18 @@ is ever executed by the test suite.
 ```
 
 The script generates `Resources/AppIcon.icns` from the vector SparkClean
-sparkle mark, assembles the bundle from `Resources/Info.plist`, and ad-hoc
-signs it with `Resources/SparkClean.entitlements` (non-sandboxed, like the CLI
-it drives — App Sandbox would break the CLI's own helper processes).
+sparkle mark, assembles the bundle from `Resources/Info.plist`, embeds
+`Sparkle.framework` into `Contents/Frameworks` (SwiftPM stages it only next to
+the build binary — the bundle would fail to launch without this copy), and
+ad-hoc signs it with `Resources/SparkClean.entitlements` (non-sandboxed, like
+the CLI it drives — App Sandbox would break the CLI's own helper processes).
+
+Bundle versions are stamped from git on every build — no hand-editing
+Info.plist. `CFBundleVersion` becomes the commit count (monotonically
+increasing, which is exactly what Sparkle compares), and
+`CFBundleShortVersionString` follows the latest tag (`git tag v1.2.0`) until
+one exists. The appcast feed (`SUFeedURL` in Info.plist) points at the repository root in git:
+`https://raw.githubusercontent.com/bhooshanb/sparkclean/main/appcast.xml`.
 
 ### DMG
 
@@ -76,14 +88,18 @@ hdiutil create -volname SparkClean -srcfolder build/SparkClean.app -ov -format U
 
 ### Signing for distribution
 
-Replace the ad-hoc identity with your Developer ID:
+Sign with your Developer ID by letting the build script do it — it re-signs the
+embedded `Sparkle.framework` (and its nested XPC services) with the same
+identity *before* sealing the app, which the hardened runtime's library
+validation requires:
 
 ```bash
-codesign --force --options runtime \
-  --entitlements Resources/SparkClean.entitlements \
-  --sign "Developer ID Application: YOUR NAME (TEAMID)" \
-  build/SparkClean.app
+CODE_SIGN_IDENTITY="Developer ID Application: YOUR NAME (TEAMID)" \
+  ./Scripts/build-app.sh
 ```
+
+Add `SUPublicEDKey` (Sparkle's `generate_keys` output) to `Resources/Info.plist`
+before shipping so updates are EdDSA-verified.
 
 Notarize with `notarytool submit`, then staple:
 
@@ -122,6 +138,7 @@ Sources/SparkCleanApp/
   UI/                              SwiftUI views, design system, menu bar
   Configuration/SparkCleanPreferences.swift
   Support/SparkCleanErrors.swift   What/why/next-step error model + logging
+  Support/SparkCleanUpdater.swift  Sparkle updater wrapper (canCheckForUpdates)
 Resources/                         Info.plist, entitlements, generated icon
 Scripts/                           build-app.sh, make-icon.swift, make-app.sh
 Tests/SparkCleanTests/             Unit + live integration tests

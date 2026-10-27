@@ -10,6 +10,7 @@ enum SettingsTab: Hashable {
 struct SettingsView: View {
     @ObservedObject private var prefs = SparkCleanPreferences.shared
     @ObservedObject private var license = SparkCleanLicenseManager.shared
+    @ObservedObject private var updater = SparkCleanUpdater.shared
     @State private var selectedTab: SettingsTab
     @State private var licenseKey = ""
     @State private var whitelist: [String] = []
@@ -72,6 +73,21 @@ struct SettingsView: View {
             Toggle("Show menu bar monitor", isOn: $prefs.menuBarEnabled)
             Toggle("Confirm before cleaning", isOn: $prefs.confirmBeforeClean)
             Toggle("Confirm before uninstalling apps", isOn: $prefs.confirmBeforeUninstall)
+            Section("App Updates") {
+                Toggle("Automatically check for updates", isOn: $updater.automaticallyChecksForUpdates)
+                HStack {
+                    Button("Check for Updates…") {
+                        updater.checkForUpdates()
+                    }
+                    .disabled(!updater.canCheckForUpdates)
+
+                    Spacer()
+
+                    Text(AppVersion.displayString)
+                        .font(.system(size: 11))
+                        .foregroundStyle(SparkCleanTheme.textSecondary)
+                }
+            }
             Section("About protection") {
                 Text("Protected locations live in the CLI whitelist files (~/.config/mole/whitelist and whitelist_optimize), shared with the terminal. Edit them below or with `mo clean --whitelist`.")
                     .font(.system(size: 11))
@@ -147,7 +163,7 @@ struct SettingsView: View {
                             NSWorkspace.shared.open(url)
                         }
                     }
-                    Link("Source code", destination: URL(string: "https://github.com/bhooshanb/mole-macos-gui")!)
+                    Link("Source code", destination: URL(string: "https://github.com/bhooshanb/sparkclean")!)
                     Link("Optional support license", destination: SparkCleanLicenseManager.purchaseURL)
                 }
                 .font(.system(size: 10))
@@ -256,6 +272,11 @@ struct SettingsView: View {
                 Button("Open Logs") { openLogs() }
                 Button("Reset Preferences") { resetPreferences() }
                     .foregroundStyle(SparkCleanTheme.danger)
+            }
+            Section("App version") {
+                Text(AppVersion.displayString)
+                    .font(SparkCleanTheme.mono)
+                    .foregroundStyle(SparkCleanTheme.textSecondary)
             }
             Section("CLI version") {
                 if let cliVersion {

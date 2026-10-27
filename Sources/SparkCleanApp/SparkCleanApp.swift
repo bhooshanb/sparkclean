@@ -6,6 +6,7 @@ struct SparkCleanApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var appModel = AppViewModel()
     @ObservedObject private var prefs = SparkCleanPreferences.shared
+    @ObservedObject private var updater = SparkCleanUpdater.shared
 
     var body: some Scene {
         WindowGroup(id: "main") {
@@ -21,6 +22,14 @@ struct SparkCleanApp: App {
         .windowToolbarStyle(.unified(showsTitle: false))
         .commands {
             CommandGroup(replacing: .newItem) {}
+            // Sparkle: right under "About", the conventional macOS location.
+            // Disabled while Sparkle is already checking/downloading.
+            CommandGroup(after: .appInfo) {
+                Button("Check for Updates…") {
+                    updater.checkForUpdates()
+                }
+                .disabled(!updater.canCheckForUpdates)
+            }
             CommandGroup(after: .newItem) {
                 Button("Clean…") { appModel.section = .clean }
                     .keyboardShortcut("1", modifiers: [.command])

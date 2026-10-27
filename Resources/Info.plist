@@ -2,40 +2,46 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>
-    <string>SparkClean</string>
-    <key>CFBundleDisplayName</key>
-    <string>SparkClean</string>
-    <key>CFBundleIdentifier</key>
-    <string>fun.sparkclean.app</string>
-    <key>CFBundleVersion</key>
-    <string>1.0.0</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleExecutable</key>
-    <string>SparkClean</string>
-    <key>CFBundleIconFile</key>
-    <string>AppIcon</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>14.0</string>
-    <key>LSApplicationCategoryType</key>
-    <string>public.app-category.utilities</string>
-    <key>NSHumanReadableCopyright</key>
-    <string>SparkClean is distributed under GNU GPL version 3. See GPL-3.0.txt and THIRD_PARTY_NOTICES.txt.</string>
-    <key>NSPrincipalClass</key>
-    <string>NSApplication</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <false/>
-    </dict>
-    <key>NSAppleEventsUsageDescription</key>
-    <string>SparkClean reads your login items so the Apps → Startup pane can show what launches when you log in. Nothing is modified without your action.</string>
-    <key>NSLocationUsageDescription</key>
-    <string>SparkClean never uses your location.</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>SparkClean</string>
+	<key>CFBundleExecutable</key>
+	<string>SparkClean</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleIdentifier</key>
+	<string>fun.sparkclean.app</string>
+	<key>CFBundleName</key>
+	<string>SparkClean</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleVersion</key>
+	<string>17</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.0</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+	</dict>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>SparkClean reads your login items so the Apps → Startup pane can show what launches when you log in. Nothing is modified without your action.</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>SparkClean is distributed under GNU GPL version 3. See GPL-3.0.txt and THIRD_PARTY_NOTICES.txt.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>SparkClean never uses your location.</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/bhooshanb/sparkclean/main/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>ml4ZLduLb//GuFia76K9jT23gUIzCpBJaUZQqGzyjyc=</string>
 </dict>
 </plist>

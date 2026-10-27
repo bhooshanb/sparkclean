@@ -6,3 +6,6 @@ build/
 mole-cli/
 # Generated icon artifacts
 Resources/AppIcon.icns
+# Private signing keys
+*.key
+sparkle_priv.key
